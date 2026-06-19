@@ -9,37 +9,37 @@
     WIJZIGINGEN t.o.v. v0.8:
     - $RootMgName verwijderd; root scope wordt afgeleid van $TenantId
     - $IntermediateRootMgName en $LandingZonesMgName zijn nu losse parameters
-    - COEO-G05: root scope fix (was hardcoded "Tenant Root Group", nu $TenantId)
-    - COEO-G08/G31/G09/C11/S01: $_.DisplayName i.p.v. $_.Properties.DisplayName (Az.Resources 7.x)
-    - COEO-G08: ghost assignments (verwijderde Entra-identiteiten) worden gefilterd en gemeld
-    - COEO-G31: Get-AzRoleEligibilityScheduleInstance i.p.v. Get-AzRoleEligibleChildResource
-    - COEO-G40: Azure CLI detectie toegevoegd; fallback naar Get-AzConsumptionBudget
-    - COEO-G34/35: check beperkt tot geconfigureerde platform subscriptions
-    - COEO-G06: zoekt policies op intermediate root én één niveau hoger (tenant root)
-    - COEO-G24/25: scope-parameter $TagPolicyMgName toegevoegd (kan lager dan root)
-    - COEO-LZ02: gemarkeerd als opinionated (CAF raadt env-based MGs af)
-    - COEO-LZ-std: scope gecorrigeerd naar applicatie LZ subscriptions
+    - PLATFORM-G05: root scope fix (was hardcoded "Tenant Root Group", nu $TenantId)
+    - PLATFORM-G08/G31/G09/C11/S01: $_.DisplayName i.p.v. $_.Properties.DisplayName (Az.Resources 7.x)
+    - PLATFORM-G08: ghost assignments (verwijderde Entra-identiteiten) worden gefilterd en gemeld
+    - PLATFORM-G31: Get-AzRoleEligibilityScheduleInstance i.p.v. Get-AzRoleEligibleChildResource
+    - PLATFORM-G40: Azure CLI detectie toegevoegd; fallback naar Get-AzConsumptionBudget
+    - PLATFORM-G34/35: check beperkt tot geconfigureerde platform subscriptions
+    - PLATFORM-G06: zoekt policies op intermediate root én één niveau hoger (tenant root)
+    - PLATFORM-G24/25: scope-parameter $TagPolicyMgName toegevoegd (kan lager dan root)
+    - PLATFORM-LZ02: gemarkeerd als opinionated (CAF raadt env-based MGs af)
+    - PLATFORM-LZ-std: scope gecorrigeerd naar applicatie LZ subscriptions
     - Test-PolicyAssignmentExists: gebruikt $_.DisplayName (Az.Resources 7.x compatibel)
 
 
     WIJZIGINGEN t.o.v. v0.9:
-    - COEO-C10/C12/C13: Firewall-query niet meer beperkt tot $HubResourceGroup;
+    - PLATFORM-C10/C12/C13: Firewall-query niet meer beperkt tot $HubResourceGroup;
       in vWAN Secured Hub zit de Firewall in een Microsoft-managed resource group
-    - COEO-G40: Get-AzConsumptionBudget vervangen door Invoke-AzRestMethod (ARM REST);
+    - PLATFORM-G40: Get-AzConsumptionBudget vervangen door Invoke-AzRestMethod (ARM REST);
       werkt zonder Az.Billing module
     - DOWR-B05/06: logicabug opgelost (leeg bij "Immutable gevonden" als detail)
-    - COEO-LZ-std: volledig recursieve MG-traversal (was maar één niveau diep)
+    - PLATFORM-LZ-std: volledig recursieve MG-traversal (was maar één niveau diep)
 
     WIJZIGINGEN t.o.v. v1.0:
-    - COEO-C10/C12/C13: optioneel via $FirewallEnabled; bij $false worden checks
+    - PLATFORM-C10/C12/C13: optioneel via $FirewallEnabled; bij $false worden checks
       als skipped gemeld met toelichting dat klant bewust geen Firewall heeft
-    - COEO-G01: Sandbox optioneel via $SandboxMgExpected; bij $false wordt een
+    - PLATFORM-G01: Sandbox optioneel via $SandboxMgExpected; bij $false wordt een
       afwijkende kleur gebruikt en telt het niet als mislukking
 
     WIJZIGINGEN t.o.v. v1.1:
-    - COEO-G05: ghost-assignments (verwijderde Entra-identiteiten) en duplicaten
+    - PLATFORM-G05: ghost-assignments (verwijderde Entra-identiteiten) en duplicaten
       op ObjectId worden niet meer meegeteld in het Owner-aantal
-    - COEO-G06: nieuwe parameter $AuditPolicyMgName; de check zoekt nu ook op deze
+    - PLATFORM-G06: nieuwe parameter $AuditPolicyMgName; de check zoekt nu ook op deze
       configureerbare MG en diens directe sub-MG's, niet alleen op intermediate
       root + tenant root. Nodig wanneer audit-policies op een lager niveau staan
       (bijv. onder een apart MG voor ongemanagede/student-subscriptions)
@@ -53,15 +53,15 @@
       zichtbaar voor wie wél een Azure Policy-laag heeft.
 
     WIJZIGINGEN t.o.v. v1.3:
-    - COEO-LZ-bkp / DOWR-B05/06 / DOWR-B08: zochten alleen in $ManagementSubId,
+    - PLATFORM-LZ-bkp / DOWR-B05/06 / DOWR-B08: zochten alleen in $ManagementSubId,
       waardoor Recovery Services Vaults onder Landing Zone-subscriptions (bijv.
-      RSV-coeo-LZ-hub onder een losse LZ-subscription) werden gemist. Nu wordt
+      RSV-PLATFORM-LZ-hub onder een losse LZ-subscription) werden gemist. Nu wordt
       ook gezocht in $ConnectivitySubId en alle subscriptions onder de Landing
-      Zones MG (dezelfde set die COEO-LZ-std al gebruikt)
-    - COEO-G06: detailtekst bij geen resultaat toonde de MG-naam dubbel als
-      $IntermediateRootMgName en $AuditPolicyMgName gelijk waren ('COEO', 'COEO').
+      Zones MG (dezelfde set die PLATFORM-LZ-std al gebruikt)
+    - PLATFORM-G06: detailtekst bij geen resultaat toonde de MG-naam dubbel als
+      $IntermediateRootMgName en $AuditPolicyMgName gelijk waren ('PLATFORM', 'PLATFORM').
       Wordt nu ontdubbeld.
-    - COEO-G09/10: consistent gemaakt met $SandboxMgExpected. Als Sandbox bewust
+    - PLATFORM-G09/10: consistent gemaakt met $SandboxMgExpected. Als Sandbox bewust
       niet bestaat ($SandboxMgExpected = $false), wordt deze check nu ook als
       ⚠️ skipped gemeld in plaats van ❌ — isoleren van een niet-bestaande MG
       heeft geen betekenis.
@@ -72,7 +72,7 @@
       (zoals $FirewallEnabled = $false) een reëel risico achterlaat zonder
       vangnet — geen onverwachte misconfiguratie (❌) en geen neutrale
       n.v.t.-situatie (⚠️ skip), maar een eigen signaal.
-    - COEO-C13: gebruikt nu de Warning-categorie. Als $FirewallEnabled = $false
+    - PLATFORM-C13: gebruikt nu de Warning-categorie. Als $FirewallEnabled = $false
       én er geen DDoS Protection Plan aanwezig is, toont de check 🟠 in plaats
       van ❌ — het is een voorzienbaar gevolg van de bewuste Firewall-keuze,
       geen losse fout. Met een DDoS Plan blijft het ✅; met Firewall ingeschakeld
@@ -83,57 +83,82 @@
       nu beide platform-subscriptions op zowel user-assigned als system-assigned
       identities over deze vier meest voorkomende resourcetypes.
 
+    WIJZIGINGEN t.o.v. v1.5:
+    - IAM-3: vervangen door Azure Resource Graph (Search-AzGraph), die in één
+      tenant-brede query ALLE resources met een Identity-blok vindt, ongeacht
+      resourcetype. De vorige hardcoded resourcetype-lijst (VM/Web App/Logic
+      App/Container Instance) miste daadwerkelijke identities op Storage
+      Accounts, Automation Accounts, Recovery Services Vaults, en Azure
+      Local/Arc-resources (AzureStackHCI, ResourceConnector, HybridCompute) —
+      bevestigd via een los diagnostisch script (Check-ManagedIdentities-
+      TenantWide.ps1) dat 9 system-assigned identities tenant-breed vond.
+      Valt terug op een uitgebreide resourcetype-lijst als Az.ResourceGraph
+      niet geïnstalleerd is.
+
+    WIJZIGINGEN t.o.v. v1.6:
+    - PLATFORM-G31: automatische Entra ID P2-licentiedetectie via Microsoft Graph
+      (Get-MgSubscribedSku). PIM vereist P2 (los, of via een bundel zoals
+      Microsoft 365 E5 / EMS E5). Tenants zonder P2 krijgen nu automatisch
+      ⚠️ skipped in plaats van ❌ — geen handmatige per-klant instelling nodig,
+      relevant omdat dit script bij meerdere klanten gebruikt gaat worden,
+      waarvan niet allemaal P2 hebben. Tenants met P2 krijgen een normale
+      ✅/❌ op basis van daadwerkelijke PIM eligible assignments. Als de
+      Microsoft.Graph.Identity.DirectoryManagement module ontbreekt, valt de
+      check terug op de oude aanpak (PIM-query zonder licentiecontrole).
+
 .NOTES
     Vereisten : Az PowerShell module (6.x of hoger) + ingelogd via Connect-AzAccount
-    Versie    : 1.5 | Juni 2026
+                Optioneel: Az.ResourceGraph (voor volledige IAM-3-dekking)
+                Optioneel: Microsoft.Graph.Identity.DirectoryManagement (voor G31 P2-detectie)
+    Versie    : 1.7 | Juni 2026
 #>
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG — pas deze waarden aan voor jouw omgeving
 # ─────────────────────────────────────────────────────────────────────────────
-$TenantId                = "73bf8b44-c1e6-49c4-9fa9-5e86a46d2942"
+$TenantId                = ""
 
 # Root scope wordt automatisch afgeleid van TenantId
 $rootScope               = "/providers/Microsoft.Management/managementGroups/$TenantId"
 
 # Naam van jouw Intermediate Root MG (de laag direct onder Tenant Root Group)
-$IntermediateRootMgName  = "COEO"
+$IntermediateRootMgName  = ""
 
 # Naam van de Landing Zones MG
 $LandingZonesMgName      = "Landing Zones"
 
 # Naam van de MG waarop tag-policies zijn toegewezen
-$TagPolicyMgName         = "COEO"
+$TagPolicyMgName         = ""
 
 # Naam van de MG waarop audit-only policies zijn toegewezen
 # Kan lager liggen dan $IntermediateRootMgName, bijvoorbeeld als je tussen Root en
 # de echte audit-laag nog een MG hebt voor losse subscriptions die je niet monitort
 # (zoals Azure for Students). Zet hier de daadwerkelijke scope van je audit-policy.
-$AuditPolicyMgName       = "COEO"
+$AuditPolicyMgName       = ""
 
 # Subscription IDs
-$ConnectivitySubId       = "15edebbb-0f88-4644-b366-f1454cc8017c"
-$ManagementSubId         = "6a639e00-4be1-4629-869d-b5f5664b4016"
+$ConnectivitySubId       = ""
+$ManagementSubId         = ""
 
 # Resource groups en resourcenamen
-$HubResourceGroup        = "RG-coeo-PL-CON-vWAN"
-$DnsResourceGroup        = "RG-coeo-PL-CON-DNS"
-$LogAnalyticsRGPlatform  = "RG-coeo-PL-MGMT-LOG"
-$VWanName                = "VWAN-coeo-PL-CON"
-$VHubName                = "VHUB-coeo-PL-CON-WEU"
-$FirewallPolicyName      = "AFWP-coeo-PL-CON-Core"
+$HubResourceGroup        = ""
+$DnsResourceGroup        = ""
+$LogAnalyticsRGPlatform  = ""
+$VWanName                = ""
+$VHubName                = ""
+$FirewallPolicyName      = ""
 
 # ─────────────────────────────────────────────────────────────────────────────
 # OPTIONELE COMPONENTEN
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Zet op $false als de klant bewust geen Azure Firewall in de vWAN hub heeft.
-# COEO-C10, COEO-C12 en COEO-C13 worden dan als skipped gemeld.
-$FirewallEnabled         = $false
+# PLATFORM-C10, PLATFORM-C12 en PLATFORM-C13 worden dan als skipped gemeld.
+$FirewallEnabled         = $true
 
 # Zet op $false als de klant bewust geen Sandbox MG heeft aangemaakt.
 # G01 telt Sandbox dan niet als ontbrekend en toont een aparte gele melding.
-$SandboxMgExpected       = $false
+$SandboxMgExpected       = $true
 
 # HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
@@ -148,13 +173,13 @@ $script:WarningCount = 0
 # governance-laag, bijv. omdat guardrails via Terraform i.p.v. Azure Policy lopen)
 # in plaats van zeven losse problemen. Zie samenvattende melding na sectie 4.
 $script:PolicyDependentChecks = [ordered]@{
-    "COEO-G06"    = $null   # audit-only policies
-    "COEO-G09/10" = $null   # sandbox peering-deny
-    "COEO-G18"    = $null   # public-endpoint-deny
-    "COEO-G23"    = $null   # custom initiatives
-    "COEO-G24/25" = $null   # tag-enforcement policy
-    "COEO-C11"    = $null   # spoke-peering-deny
-    "COEO-S01"    = $null   # EPAC/security governance
+    "PLATFORM-G06"    = $null   # audit-only policies
+    "PLATFORM-G09/10" = $null   # sandbox peering-deny
+    "PLATFORM-G18"    = $null   # public-endpoint-deny
+    "PLATFORM-G23"    = $null   # custom initiatives
+    "PLATFORM-G24/25" = $null   # tag-enforcement policy
+    "PLATFORM-C11"    = $null   # spoke-peering-deny
+    "PLATFORM-S01"    = $null   # EPAC/security governance
 }
 
 function Set-PolicyDependentResult {
@@ -310,7 +335,7 @@ function Get-PolicyAssignmentsFiltered {
 # ─────────────────────────────────────────────────────────────────────────────
 Write-Host ""
 Write-Host "╔══════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║   Azure CAF Platform Checklist Verificatie  v1.5            ║" -ForegroundColor Cyan
+Write-Host "║   Azure CAF Platform Checklist Verificatie  v1.7            ║" -ForegroundColor Cyan
 Write-Host "╚══════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
 Write-Host ""
 
@@ -331,7 +356,7 @@ Write-Host ""
 # ═══════════════════════════════════════════════════════════════════════════════
 Write-SectionHeader "1. Governance & Management Groups"
 
-# COEO-G01 — Management group structuur
+# PLATFORM-G01 — Management group structuur
 # Sandbox wordt alleen als ontbrekend beschouwd als $SandboxMgExpected = $true.
 # Bij $false krijgt het een aparte gele melding en telt het niet als mislukking.
 $mgChecks = [ordered]@{
@@ -358,7 +383,7 @@ $mgFound = @($mgChecks.GetEnumerator() | Where-Object { $null -ne $_.Value } |
     ForEach-Object { "$($_.Key) [GroupId: $($_.Value.Name)]" })
 
 $g01ok = $mgMissingRequired.Count -eq 0
-Write-CheckResult "COEO-G01" "Management group structuur aanmaken (Root → Intermediate → sub-groepen)" $g01ok `
+Write-CheckResult "PLATFORM-G01" "Management group structuur aanmaken (Root → Intermediate → sub-groepen)" $g01ok `
     -Detail $(if ($g01ok -and $mgMissingAll.Count -eq 0) {
         "Alle MG's gevonden: $($mgFound -join ' | ')"
     } elseif ($g01ok) {
@@ -369,17 +394,17 @@ Write-CheckResult "COEO-G01" "Management group structuur aanmaken (Root → Inte
 
 # Aparte gele melding als Sandbox bewust weggelaten is
 if (-not $SandboxMgExpected -and ($null -eq $mgChecks["Sandbox"])) {
-    $refPadded = "COEO-G01-SBX".PadRight(18)
+    $refPadded = "PLATFORM-G01-SBX".PadRight(18)
     Write-Host "  ⚠️  $refPadded Sandbox MG niet aangemaakt (bewust weggelaten, `$SandboxMgExpected = `$false)" `
         -ForegroundColor DarkYellow
     $script:SkipCount++
 } elseif (-not $SandboxMgExpected -and ($null -ne $mgChecks["Sandbox"])) {
-    $refPadded = "COEO-G01-SBX".PadRight(18)
+    $refPadded = "PLATFORM-G01-SBX".PadRight(18)
     Write-Host "  ℹ️  $refPadded Sandbox MG gevonden maar `$SandboxMgExpected = `$false — overweeg dit bij te werken" `
         -ForegroundColor DarkYellow
 }
 
-# COEO-G05 — Root MG: alleen break-glass
+# PLATFORM-G05 — Root MG: alleen break-glass
 # Fix: scope afgeleid van $TenantId (was hardcoded "Tenant Root Group" als GroupId)
 # Fix: ghost assignments (ObjectType "Unknown", lege SignInName) worden niet meegeteld.
 # Dubbele assignments op hetzelfde principal (zelfde ObjectId, meerdere keren toegewezen
@@ -418,9 +443,9 @@ try {
         "Te veel actieve Owner-assignments ($($rootOwnersUnique.Count)): $ownerNames$ghostNote"
     }
 } catch { $g05ok = $false; $g05detail = "Kon Root MG RBAC niet ophalen (scope: $rootScope)" }
-Write-CheckResult "COEO-G05" "Root MG: alleen break-glass accounts, geen onnodige RBAC" $g05ok -Detail $g05detail
+Write-CheckResult "PLATFORM-G05" "Root MG: alleen break-glass accounts, geen onnodige RBAC" $g05ok -Detail $g05detail
 
-# COEO-G06 — Audit-only policies
+# PLATFORM-G06 — Audit-only policies
 # Fix: zoekt niet alleen op intermediate root + tenant root, maar ook op de
 # geconfigureerde $AuditPolicyMgName en al diens directe sub-MG's.
 # Reden: bij klanten met een tussenlaag (bijv. een MG voor losse/ongemanagede
@@ -490,10 +515,10 @@ try {
         "controleer policy assignments of pas `$AuditPolicyMgName aan naar de juiste MG"
     }
 } catch { $g06ok = $false; $g06detail = "Kon policy assignments niet ophalen" }
-Write-CheckResult "COEO-G06" "Tenant level: uitsluitend audit-only policies toewijzen" $g06ok -Detail $g06detail
-Set-PolicyDependentResult -Ref "COEO-G06" -Passed $g06ok
+Write-CheckResult "PLATFORM-G06" "Tenant level: uitsluitend audit-only policies toewijzen" $g06ok -Detail $g06detail
+Set-PolicyDependentResult -Ref "PLATFORM-G06" -Passed $g06ok
 
-# COEO-G07 — Custom roles
+# PLATFORM-G07 — Custom roles
 try {
     $customRoles = Get-AzRoleDefinition -Custom -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
     $g07ok = ($customRoles).Count -gt 0
@@ -503,15 +528,15 @@ try {
         "Geen custom rollen gevonden op tenant-niveau"
     }
 } catch { $g07ok = $false; $g07detail = "Kon custom roles niet ophalen" }
-Write-CheckResult "COEO-G07" "Custom role definitions op tenant-niveau gedefinieerd" $g07ok -Detail $g07detail
+Write-CheckResult "PLATFORM-G07" "Custom role definitions op tenant-niveau gedefinieerd" $g07ok -Detail $g07detail
 
-# COEO-G09/10 — Sandbox isoleren
+# PLATFORM-G09/10 — Sandbox isoleren
 # Fix: $_.DisplayName i.p.v. $_.Properties.DisplayName (Az.Resources 7.x)
 # Fix: consistent met $SandboxMgExpected. Als Sandbox bewust niet bestaat
-# (zoals ook gemeld bij COEO-G01-SBX), heeft "isoleer de Sandbox MG" geen
+# (zoals ook gemeld bij PLATFORM-G01-SBX), heeft "isoleer de Sandbox MG" geen
 # betekenis meer — die check wordt dan als skipped gemeld in plaats van ❌.
 if (-not $SandboxMgExpected -and ($null -eq (Find-ManagementGroup -Name "Sandbox"))) {
-    Write-CheckResult "COEO-G09/10" "Sandbox MG volledig isoleren (geen VNet peerings via policy)" $false -Skipped $true `
+    Write-CheckResult "PLATFORM-G09/10" "Sandbox MG volledig isoleren (geen VNet peerings via policy)" $false -Skipped $true `
         -Detail "Overgeslagen: `$SandboxMgExpected = `$false en Sandbox MG bestaat niet — niets om te isoleren"
 } else {
 try {
@@ -544,21 +569,21 @@ try {
         "Geen peering-blokkade policy op Sandbox MG — gevonden policies: $(if ($allNames) { $allNames } else { 'geen' })"
     }
 } catch { $g09ok = $false; $g09detail = "Sandbox MG niet gevonden of geen rechten" }
-Write-CheckResult "COEO-G09/10" "Sandbox MG volledig isoleren (geen VNet peerings via policy)" $g09ok -Detail $g09detail
-Set-PolicyDependentResult -Ref "COEO-G09/10" -Passed $g09ok
+Write-CheckResult "PLATFORM-G09/10" "Sandbox MG volledig isoleren (geen VNet peerings via policy)" $g09ok -Detail $g09detail
+Set-PolicyDependentResult -Ref "PLATFORM-G09/10" -Passed $g09ok
 }
 
-# COEO-G11 — Decommissioned MG
+# PLATFORM-G11 — Decommissioned MG
 $g11mg = Find-ManagementGroup -Name "Decommissioned"
 $g11ok = ($null -ne $g11mg)
-Write-CheckResult "COEO-G11" "Decommissioned management group aangemaakt" $g11ok `
+Write-CheckResult "PLATFORM-G11" "Decommissioned management group aangemaakt" $g11ok `
     -Detail $(if ($g11ok) {
         "Gevonden — DisplayName: '$($g11mg.DisplayName)' | GroupId: '$($g11mg.Name)'"
     } else {
         "MG 'Decommissioned' niet gevonden"
     })
 
-# COEO-G15 — Key Vaults voor secrets
+# PLATFORM-G15 — Key Vaults voor secrets
 try {
     Set-AzContext -SubscriptionId $ConnectivitySubId -ErrorAction SilentlyContinue | Out-Null
     $kvsConn = Get-AzKeyVault -ErrorAction SilentlyContinue
@@ -574,9 +599,9 @@ try {
         "Geen Key Vaults gevonden"
     }
 } catch { $g15ok = $false; $g15detail = "Kon Key Vaults niet ophalen" }
-Write-CheckResult "COEO-G15" "Key Vaults aangemaakt voor credentials en secrets" $g15ok -Detail $g15detail
+Write-CheckResult "PLATFORM-G15" "Key Vaults aangemaakt voor credentials en secrets" $g15ok -Detail $g15detail
 
-# COEO-G16 — Resource locks op platform resources
+# PLATFORM-G16 — Resource locks op platform resources
 # Opmerking: overweeg een Deny Delete policy of deployment stack met deny-permissions
 # als alternatief voor locks — schaalbaar voor meerdere resource groups
 try {
@@ -599,7 +624,7 @@ try {
         "Geen CanNotDelete locks gevonden — alternatief: Deny Delete policy of deployment stack"
     }
 } catch { $g16ok = $false; $g16detail = "Fout: $_" }
-Write-CheckResult "COEO-G16" "Resource locks (CanNotDelete) op platform-resources" $g16ok -Detail $g16detail
+Write-CheckResult "PLATFORM-G16" "Resource locks (CanNotDelete) op platform-resources" $g16ok -Detail $g16detail
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 2. RBAC & TOEGANGSBEHEER
@@ -610,7 +635,7 @@ Write-SectionHeader "2. RBAC & Toegangsbeheer"
 $intermediateRootGroupId = if ($mgIntermediate) { $mgIntermediate.Name } else { $IntermediateRootMgName }
 $intermediateRootScope   = "/providers/Microsoft.Management/managementGroups/$intermediateRootGroupId"
 
-# COEO-G08 — RBAC op intermediate root MG
+# PLATFORM-G08 — RBAC op intermediate root MG
 # Fix: ghost assignments (verwijderd uit Entra) worden gefilterd op ObjectType = "Unknown"
 try {
     $g08roles   = Get-AzRoleAssignment -Scope $intermediateRootScope -ErrorAction SilentlyContinue
@@ -636,27 +661,72 @@ try {
         "Geen actieve Contributor op [$IntermediateRootMgName] MG — gevonden rollen: $(if ($foundRoles) { $foundRoles } else { 'geen' })$ghostWarn"
     }
 } catch { $g08ok = $false; $g08detail = "Kon RBAC op [$IntermediateRootMgName] MG niet ophalen" }
-Write-CheckResult "COEO-G08" "RBAC beheerders toegewezen op intermediate root MG niveau" $g08ok -Detail $g08detail
+Write-CheckResult "PLATFORM-G08" "RBAC beheerders toegewezen op intermediate root MG niveau" $g08ok -Detail $g08detail
 
-# COEO-G31 — PIM eligible assignments
+# PLATFORM-G31 — PIM eligible assignments
 # Fix: Get-AzRoleEligibilityScheduleInstance i.p.v. Get-AzRoleEligibleChildResource
 # Get-AzRoleEligibleChildResource geeft child-resources terug, niet de assignments zelf
+#
+# Fix v2: PIM vereist Entra ID P2 (los, of via een bundel zoals Microsoft 365 E5,
+# EMS E5, of Microsoft 365 E5 Security). Zonder die licentie is "geen PIM eligible
+# assignments" geen misconfiguratie maar een onvermijdelijke licentiebeperking.
+# Het script detecteert dit nu automatisch via Microsoft Graph (Get-MgSubscribedSku)
+# in plaats van dat dit per klant handmatig hoeft te worden ingesteld — relevant
+# omdat dit script ook bij klanten met wél P2 gebruikt gaat worden, waar G31 dan
+# gewoon een normale ✅/❌ moet blijven geven.
+$g31licenseChecked = $false
+$g31hasP2           = $false
 try {
-    $pimAssignments = Get-AzRoleEligibilityScheduleInstance `
-        -Scope $intermediateRootScope -ErrorAction SilentlyContinue
-    $g31ok = ($pimAssignments).Count -gt 0
-    $g31detail = if ($g31ok) {
-        "$($pimAssignments.Count) PIM eligible assignment(s) gevonden op [$IntermediateRootMgName] MG"
-    } else {
-        "Geen PIM eligible assignments gevonden — controleer of Entra PIM is geconfigureerd (licentie-afhankelijk)"
+    $graphModule = Get-Module -ListAvailable -Name Microsoft.Graph.Identity.DirectoryManagement -ErrorAction SilentlyContinue
+    if ($graphModule) {
+        $mgContext = Get-MgContext -ErrorAction SilentlyContinue
+        if (-not $mgContext) {
+            Connect-MgGraph -Scopes "Directory.Read.All" -NoWelcome -ErrorAction Stop
+        }
+        # SKU's die Entra ID P2 bevatten (los of als onderdeel van een bundel).
+        # ServicePlans binnen een SKU tonen het daadwerkelijke entitlement;
+        # SkuPartNumber alleen is niet altijd dekkend (P2 zit ook embedded in
+        # EMS E5, Microsoft 365 E5, en Microsoft 365 E5 Security bijvoorbeeld).
+        $skus = Get-MgSubscribedSku -ErrorAction Stop
+        $p2ServicePlanNames = @("AAD_PREMIUM_P2", "EMSPREMIUM")
+        $matchingSkus = $skus | Where-Object {
+            $sku = $_
+            $sku.ServicePlans | Where-Object {
+                $_.ServicePlanName -in $p2ServicePlanNames -and $_.ProvisioningStatus -eq "Success"
+            }
+        }
+        $g31licenseChecked = $true
+        $g31hasP2 = ($matchingSkus.Count -gt 0)
     }
-    Write-CheckResult "COEO-G31" "Admin-rollen via Entra PIM toewijzen" $g31ok -Detail $g31detail
 } catch {
-    Write-CheckResult "COEO-G31" "Admin-rollen via Entra PIM toewijzen" $false -Skipped $true `
-        -Detail "Onvoldoende rechten voor PIM-query of Az.Resources module te oud (vereist 6.x+)"
+    # Licentiecheck kon niet uitgevoerd worden (geen Graph-module, geen rechten,
+    # geen interactieve sessie mogelijk) — val terug op de oude aanpak: probeer
+    # de PIM-query gewoon en behandel een lege/foutieve uitkomst als onzeker.
+    $g31licenseChecked = $false
 }
 
-# COEO-G34/35 — RBAC-groepen per subscription
+if ($g31licenseChecked -and -not $g31hasP2) {
+    Write-CheckResult "PLATFORM-G31" "Admin-rollen via Entra PIM toewijzen" $false -Skipped $true `
+        -Detail "Overgeslagen: geen Entra ID P2 (of bundel met P2) gevonden in de tenant — PIM is niet beschikbaar zonder deze licentie"
+} else {
+    try {
+        $pimAssignments = Get-AzRoleEligibilityScheduleInstance `
+            -Scope $intermediateRootScope -ErrorAction SilentlyContinue
+        $g31ok = ($pimAssignments).Count -gt 0
+        $licenseNote = if ($g31licenseChecked) { " (P2-licentie bevestigd aanwezig)" } else { " (licentiestatus niet automatisch gecontroleerd — installeer Microsoft.Graph.Identity.DirectoryManagement voor automatische detectie)" }
+        $g31detail = if ($g31ok) {
+            "$($pimAssignments.Count) PIM eligible assignment(s) gevonden op [$IntermediateRootMgName] MG$licenseNote"
+        } else {
+            "Geen PIM eligible assignments gevonden$licenseNote — controleer of Entra PIM correct is geconfigureerd"
+        }
+        Write-CheckResult "PLATFORM-G31" "Admin-rollen via Entra PIM toewijzen" $g31ok -Detail $g31detail
+    } catch {
+        Write-CheckResult "PLATFORM-G31" "Admin-rollen via Entra PIM toewijzen" $false -Skipped $true `
+            -Detail "Onvoldoende rechten voor PIM-query of Az.Resources module te oud (vereist 6.x+)"
+    }
+}
+
+# PLATFORM-G34/35 — RBAC-groepen per subscription
 # Fix: beperkt tot geconfigureerde platform subscriptions i.p.v. alle tenant-subscriptions
 # Bij grote tenants (1000+ subscriptions) is iteratie over alle subs niet haalbaar
 try {
@@ -682,7 +752,7 @@ try {
         $g3435missing -join ' | '
     }
 } catch { $g3435ok = $false; $g3435detail = "Kon subscriptions of role assignments niet ophalen" }
-Write-CheckResult "COEO-G34/35" "Per platform subscription drie standaard RBAC-groepen" $g3435ok `
+Write-CheckResult "PLATFORM-G34/35" "Per platform subscription drie standaard RBAC-groepen" $g3435ok `
     -Detail "$g3435detail — check beperkt tot Connectivity + Management subs"
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -690,7 +760,7 @@ Write-CheckResult "COEO-G34/35" "Per platform subscription drie standaard RBAC-g
 # ═══════════════════════════════════════════════════════════════════════════════
 Write-SectionHeader "3. Azure Policy & Compliance"
 
-# COEO-G22 — Defender for Cloud
+# PLATFORM-G22 — Defender for Cloud
 if ($ConnectivitySubId) { Set-AzContext -SubscriptionId $ConnectivitySubId -ErrorAction SilentlyContinue | Out-Null }
 try {
     $defenderPlans = Get-AzSecurityPricing -ErrorAction SilentlyContinue
@@ -704,9 +774,9 @@ try {
         "Alle Defender-plans op Free-tier — activeer minimaal: VirtualMachines, SqlServers, StorageAccounts, KeyVaults"
     }
 } catch { $g22ok = $false; $g22detail = "Kon Defender for Cloud pricing niet ophalen" }
-Write-CheckResult "COEO-G22" "Microsoft Defender for Cloud geactiveerd op subscriptions" $g22ok -Detail $g22detail
+Write-CheckResult "PLATFORM-G22" "Microsoft Defender for Cloud geactiveerd op subscriptions" $g22ok -Detail $g22detail
 
-# COEO-G23 — Policy initiatives
+# PLATFORM-G23 — Policy initiatives
 try {
     $initiatives = Get-AzPolicySetDefinition -Custom -ErrorAction SilentlyContinue
     $g23ok = ($initiatives).Count -gt 0
@@ -719,10 +789,10 @@ try {
         "Geen custom policy initiatives — verwacht: Tagging, LandingZone, PlatformConnectivity, PlatformSecurity"
     }
 } catch { $g23ok = $false; $g23detail = "Kon policy initiatives niet ophalen" }
-Write-CheckResult "COEO-G23" "Azure Policies gegroepeerd in initiatives (custom)" $g23ok -Detail $g23detail
-Set-PolicyDependentResult -Ref "COEO-G23" -Passed $g23ok
+Write-CheckResult "PLATFORM-G23" "Azure Policies gegroepeerd in initiatives (custom)" $g23ok -Detail $g23detail
+Set-PolicyDependentResult -Ref "PLATFORM-G23" -Passed $g23ok
 
-# COEO-G18 — Policy: publieke endpoints blokkeren
+# PLATFORM-G18 — Policy: publieke endpoints blokkeren
 try {
     $lzMgG18   = Find-ManagementGroup -Name $LandingZonesMgName
     $lzScopeG18 = if ($lzMgG18) {
@@ -747,10 +817,10 @@ try {
         "Geen public-endpoint-blokkade policy op '$LandingZonesMgName' — verwacht: 'Deny Public Endpoints'"
     }
 } catch { $g18ok = $false; $g18detail = "Kon policy assignments niet ophalen" }
-Write-CheckResult "COEO-G18" "Policy: publieke endpoints geblokkeerd in alle landing zones" $g18ok -Detail $g18detail
-Set-PolicyDependentResult -Ref "COEO-G18" -Passed $g18ok
+Write-CheckResult "PLATFORM-G18" "Policy: publieke endpoints geblokkeerd in alle landing zones" $g18ok -Detail $g18detail
+Set-PolicyDependentResult -Ref "PLATFORM-G18" -Passed $g18ok
 
-# COEO-G13 — Log retentie
+# PLATFORM-G13 — Log retentie
 try {
     Set-AzContext -SubscriptionId $ManagementSubId -ErrorAction SilentlyContinue | Out-Null
     $workspaces    = Get-AzOperationalInsightsWorkspace -ErrorAction SilentlyContinue
@@ -764,14 +834,14 @@ try {
         "Retentie te laag: $(($shortRetention | ForEach-Object { "$($_.Name)=$($_.retentionInDays)d (min. 30d)" }) -join ', ')"
     }
 } catch { $g13ok = $false; $g13detail = "Kon Log Analytics workspaces niet ophalen: $_" }
-Write-CheckResult "COEO-G13" "Log retentie ingesteld (min. 30 dagen)" $g13ok -Detail $g13detail
+Write-CheckResult "PLATFORM-G13" "Log retentie ingesteld (min. 30 dagen)" $g13ok -Detail $g13detail
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 4. TAGGING & NAAMGEVING
 # ═══════════════════════════════════════════════════════════════════════════════
 Write-SectionHeader "4. Tagging & Naamgeving"
 
-# COEO-G24/25 — Tag policy
+# PLATFORM-G24/25 — Tag policy
 # Fix: scope gebaseerd op $TagPolicyMgName (configureerbaar, kan lager dan intermediate root zijn)
 # Let op: een Deny-tag-policy op dezelfde scope als audit-only (G06) is inconsistent.
 # Zet $TagPolicyMgName op de MG waarop jij daadwerkelijk de tag-policy hebt staan.
@@ -799,10 +869,10 @@ try {
         "Geen tag-policy gevonden op '$TagPolicyMgName' — verwacht: 'Require Tag on Resources' of vergelijkbaar"
     }
 } catch { $g2425ok = $false; $g2425detail = "Kon tag-policies niet ophalen" }
-Write-CheckResult "COEO-G24/25" "Tag-beleid afgedwongen via policy op management groups" $g2425ok -Detail $g2425detail
-Set-PolicyDependentResult -Ref "COEO-G24/25" -Passed $g2425ok
+Write-CheckResult "PLATFORM-G24/25" "Tag-beleid afgedwongen via policy op management groups" $g2425ok -Detail $g2425detail
+Set-PolicyDependentResult -Ref "PLATFORM-G24/25" -Passed $g2425ok
 
-# COEO-G40 — Budget alerts
+# PLATFORM-G40 — Budget alerts
 # Fix: Invoke-AzRestMethod (ARM REST API) i.p.v. Get-AzConsumptionBudget.
 # Get-AzConsumptionBudget vereist de Az.Billing module die niet standaard aanwezig is.
 # De ARM REST endpoint /providers/Microsoft.Consumption/budgets werkt met elke Az-sessie.
@@ -847,7 +917,7 @@ try {
         "Geen budgets gevonden op Connectivity of Management — stel budgets in via Cost Management"
     }
 } catch { $g40ok = $false; $g40detail = "Fout bij ophalen budgets: $_" }
-Write-CheckResult "COEO-G40" "Budget alerts automatisch ingesteld per subscription" $g40ok -Detail $g40detail
+Write-CheckResult "PLATFORM-G40" "Budget alerts automatisch ingesteld per subscription" $g40ok -Detail $g40detail
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 5. CONNECTIVITY & NETWERK
@@ -858,7 +928,7 @@ if ($ConnectivitySubId) {
     Set-AzContext -SubscriptionId $ConnectivitySubId -ErrorAction SilentlyContinue | Out-Null
 }
 
-# COEO-C02 — Virtual WAN
+# PLATFORM-C02 — Virtual WAN
 try {
     $vwans  = Get-AzVirtualWan -ResourceGroupName $HubResourceGroup -ErrorAction SilentlyContinue
     $c02ok  = ($vwans).Count -gt 0
@@ -868,9 +938,9 @@ try {
         "Geen Virtual WAN gevonden in resource group '$HubResourceGroup'"
     }
 } catch { $c02ok = $false; $c02detail = "Resource group '$HubResourceGroup' niet gevonden of geen rechten" }
-Write-CheckResult "COEO-C02" "Azure Virtual WAN aangemaakt (West Europe)" $c02ok -Detail $c02detail
+Write-CheckResult "PLATFORM-C02" "Azure Virtual WAN aangemaakt (West Europe)" $c02ok -Detail $c02detail
 
-# COEO-C02b — Secured Hub
+# PLATFORM-C02b — Secured Hub
 try {
     $hubs      = Get-AzVirtualHub -ResourceGroupName $HubResourceGroup -ErrorAction SilentlyContinue
     $hubOk     = ($hubs).Count -gt 0
@@ -880,9 +950,9 @@ try {
         "Geen Virtual Hub gevonden in '$HubResourceGroup'"
     }
 } catch { $hubOk = $false; $hubDetail = "Kon hubs niet ophalen" }
-Write-CheckResult "COEO-C02b" "Secured Hub aangemaakt (West Europe)" $hubOk -Detail $hubDetail
+Write-CheckResult "PLATFORM-C02b" "Secured Hub aangemaakt (West Europe)" $hubOk -Detail $hubDetail
 
-# COEO-C05 — Platform VNets
+# PLATFORM-C05 — Platform VNets
 try {
     Set-AzContext -SubscriptionId $ConnectivitySubId -ErrorAction SilentlyContinue | Out-Null
     $vnetsConn = Get-AzVirtualNetwork -ResourceGroupName $HubResourceGroup -ErrorAction SilentlyContinue
@@ -899,13 +969,13 @@ try {
         "$($vnets.Count) VNets gevonden$(if ($foundNames) { ": $foundNames" }) — verwacht minimaal Connectivity + Management"
     }
 } catch { $c05ok = $false; $c05detail = "Kon VNets niet ophalen in '$HubResourceGroup'" }
-Write-CheckResult "COEO-C05" "Platform VNets aangemaakt (Connectivity / Management)" $c05ok -Detail $c05detail
+Write-CheckResult "PLATFORM-C05" "Platform VNets aangemaakt (Connectivity / Management)" $c05ok -Detail $c05detail
 
-# COEO-C10 — Azure Firewall Policy
+# PLATFORM-C10 — Azure Firewall Policy
 # Optioneel via $FirewallEnabled: bij $false wordt de check als skipped gemeld.
 # In vWAN Secured Hub beheert Microsoft de Firewall in een eigen resource group (mrg-*).
 if (-not $FirewallEnabled) {
-    Write-CheckResult "COEO-C10" "Azure Firewall Policy geconfigureerd in Secured Hub" $false -Skipped $true `
+    Write-CheckResult "PLATFORM-C10" "Azure Firewall Policy geconfigureerd in Secured Hub" $false -Skipped $true `
         -Detail "Overgeslagen: `$FirewallEnabled = `$false (klant heeft bewust geen Azure Firewall)"
 } else {
     try {
@@ -920,10 +990,10 @@ if (-not $FirewallEnabled) {
             "Geen Firewall Policy gevonden in Connectivity subscription — vWAN Secured Hub gebruikt Microsoft-managed RG"
         }
     } catch { $c10ok = $false; $c10detail = "Kon Firewall Policies niet ophalen" }
-    Write-CheckResult "COEO-C10" "Azure Firewall Policy geconfigureerd in Secured Hub" $c10ok -Detail $c10detail
+    Write-CheckResult "PLATFORM-C10" "Azure Firewall Policy geconfigureerd in Secured Hub" $c10ok -Detail $c10detail
 }
 
-# COEO-C11 — VNet peerings tussen spokes verboden
+# PLATFORM-C11 — VNet peerings tussen spokes verboden
 # Fix: $_.DisplayName i.p.v. $_.Properties.DisplayName (Az.Resources 7.x)
 try {
     $sandboxMgC11    = Find-ManagementGroup -Name "Sandbox"
@@ -955,14 +1025,14 @@ try {
         "Geen spoke-peering-blokkade policy gevonden op '$IntermediateRootMgName' of Sandbox MG"
     }
 } catch { $c11ok = $false; $c11detail = "Kon policy assignments niet ophalen" }
-Write-CheckResult "COEO-C11" "Policy: VNet peerings tussen spokes verboden" $c11ok -Detail $c11detail
-Set-PolicyDependentResult -Ref "COEO-C11" -Passed $c11ok
+Write-CheckResult "PLATFORM-C11" "Policy: VNet peerings tussen spokes verboden" $c11ok -Detail $c11detail
+Set-PolicyDependentResult -Ref "PLATFORM-C11" -Passed $c11ok
 
-# COEO-C12 — Internet breakout via Virtual WAN Hub Routing Intent
+# PLATFORM-C12 — Internet breakout via Virtual WAN Hub Routing Intent
 # Optioneel via $FirewallEnabled: zonder Firewall is Routing Intent niet bruikbaar,
 # dus de check heeft dan geen betekenis en wordt als skipped gemeld.
 if (-not $FirewallEnabled) {
-    Write-CheckResult "COEO-C12" "Internet breakout via vWAN Hub Routing Intent" $false -Skipped $true `
+    Write-CheckResult "PLATFORM-C12" "Internet breakout via vWAN Hub Routing Intent" $false -Skipped $true `
         -Detail "Overgeslagen: `$FirewallEnabled = `$false (Routing Intent vereist Azure Firewall in Secured Hub)"
 } else {
     try {
@@ -986,7 +1056,7 @@ if (-not $FirewallEnabled) {
             "Geen Virtual Hub of Firewall gevonden in Connectivity subscription"
         }
     } catch { $c12ok = $false; $c12detail = "Kon Virtual Hub niet ophalen" }
-    Write-CheckResult "COEO-C12" "Internet breakout via vWAN Hub Routing Intent" $c12ok -Detail $c12detail
+    Write-CheckResult "PLATFORM-C12" "Internet breakout via vWAN Hub Routing Intent" $c12ok -Detail $c12detail
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -994,7 +1064,7 @@ if (-not $FirewallEnabled) {
 # ═══════════════════════════════════════════════════════════════════════════════
 Write-SectionHeader "6. DNS & Private Endpoints"
 
-# COEO-C07 — DNS Private Resolver
+# PLATFORM-C07 — DNS Private Resolver
 try {
     Set-AzContext -SubscriptionId $ConnectivitySubId -ErrorAction SilentlyContinue | Out-Null
     $dnsResolvers = Get-AzDnsResolver -ResourceGroupName $HubResourceGroup -ErrorAction SilentlyContinue
@@ -1005,9 +1075,9 @@ try {
         "Geen DNS Private Resolver in '$HubResourceGroup' — verwacht voor hybride DNS conditional forwarding"
     }
 } catch { $c07ok = $false; $c07detail = "Kon DNS Resolvers niet ophalen (module vereist: Az.DnsResolver)" }
-Write-CheckResult "COEO-C07" "Azure DNS Private Resolver ingericht" $c07ok -Detail $c07detail
+Write-CheckResult "PLATFORM-C07" "Azure DNS Private Resolver ingericht" $c07ok -Detail $c07detail
 
-# COEO-C09 — Private DNS Zones
+# PLATFORM-C09 — Private DNS Zones
 try {
     Set-AzContext -SubscriptionId $ConnectivitySubId -ErrorAction SilentlyContinue | Out-Null
     $dnsZones  = Get-AzPrivateDnsZone -ResourceGroupName $DnsResourceGroup -ErrorAction SilentlyContinue
@@ -1018,9 +1088,9 @@ try {
         "Geen Private DNS Zones gevonden in '$DnsResourceGroup'"
     }
 } catch { $c09ok = $false; $c09detail = "Resource group '$DnsResourceGroup' niet gevonden of geen rechten" }
-Write-CheckResult "COEO-C09" "Private DNS Zones aangemaakt in $DnsResourceGroup" $c09ok -Detail $c09detail
+Write-CheckResult "PLATFORM-C09" "Private DNS Zones aangemaakt in $DnsResourceGroup" $c09ok -Detail $c09detail
 
-# COEO-C09a — Specifieke DNS zones
+# PLATFORM-C09a — Specifieke DNS zones
 $requiredZones = @(
     "privatelink.blob.core.windows.net",
     "privatelink.file.core.windows.net",
@@ -1039,9 +1109,9 @@ try {
         "Ontbrekend: $($missingZones -join ', ') | Aanwezig: $(if ($presentZones) { $presentZones -join ', ' } else { 'geen' })"
     }
 } catch { $c09aok = $false; $c09adetail = "Kon DNS zones niet ophalen" }
-Write-CheckResult "COEO-C09a" "DNS zones aangemaakt: blob, file, keyvault, SQL, etc." $c09aok -Detail $c09adetail
+Write-CheckResult "PLATFORM-C09a" "DNS zones aangemaakt: blob, file, keyvault, SQL, etc." $c09aok -Detail $c09adetail
 
-# COEO-C08 — Private Endpoints (steekproef platform subscriptions)
+# PLATFORM-C08 — Private Endpoints (steekproef platform subscriptions)
 try {
     Set-AzContext -SubscriptionId $ConnectivitySubId -ErrorAction SilentlyContinue | Out-Null
     $pesConn = Get-AzPrivateEndpoint -ErrorAction SilentlyContinue
@@ -1059,14 +1129,14 @@ try {
         "Geen private endpoints gevonden in Connectivity of Management subscription"
     }
 } catch { $c08ok = $false; $c08detail = "Kon private endpoints niet ophalen" }
-Write-CheckResult "COEO-C08" "Private Endpoints gedeployed voor PaaS-resources" $c08ok -Detail $c08detail
+Write-CheckResult "PLATFORM-C08" "Private Endpoints gedeployed voor PaaS-resources" $c08ok -Detail $c08detail
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 7. SECURITY
 # ═══════════════════════════════════════════════════════════════════════════════
 Write-SectionHeader "7. Security"
 
-# COEO-S01 — Security policies / EPAC
+# PLATFORM-S01 — Security policies / EPAC
 # Fix: $_.DisplayName i.p.v. $_.Properties.DisplayName (Az.Resources 7.x)
 try {
     $s01policy = Get-PolicyAssignmentsFiltered `
@@ -1086,12 +1156,12 @@ try {
         "Geen security/EPAC policies gevonden op '$IntermediateRootMgName'"
     }
 } catch { $s01ok = $false; $s01detail = "Kon security policies niet ophalen" }
-Write-CheckResult "COEO-S01" "Security Governance policies (EPAC) geïmplementeerd" $s01ok -Detail $s01detail
-Set-PolicyDependentResult -Ref "COEO-S01" -Passed $s01ok
+Write-CheckResult "PLATFORM-S01" "Security Governance policies (EPAC) geïmplementeerd" $s01ok -Detail $s01detail
+Set-PolicyDependentResult -Ref "PLATFORM-S01" -Passed $s01ok
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Samenvattende melding: patroonherkenning over de zeven Azure Policy-afhankelijke checks
-# (COEO-G06, G09/10, G18, G23, G24/25, C11, S01). Als de meeste/alle hiervan ❌ zijn,
+# (PLATFORM-G06, G09/10, G18, G23, G24/25, C11, S01). Als de meeste/alle hiervan ❌ zijn,
 # is dat vermoedelijk één onderliggende oorzaak (geen custom Azure Policy governance-
 # laag in deze tenant) in plaats van zeven losse misconfiguraties. Voorkomt dat je
 # zeven keer dezelfde diagnose opnieuw moet doen.
@@ -1116,7 +1186,7 @@ if ($policyChecked -gt 0 -and $policyFailed.Count -ge 4) {
     Write-Host "  ────────────────────────────────────────────────────────" -ForegroundColor DarkYellow
 }
 
-# COEO-C13 — DDoS bescherming / Azure Firewall
+# PLATFORM-C13 — DDoS bescherming / Azure Firewall
 # Optioneel via $FirewallEnabled: bij $false wordt alleen gecontroleerd of er een
 # apart DDoS Protection Plan aanwezig is als alternatieve beschermingslaag.
 # Toelichting: Azure Firewall in vWAN Secured Hub biedt geen volledige DDoS-bescherming.
@@ -1162,69 +1232,87 @@ try {
         }
     }
 } catch { $c13ok = $false; $c13warning = $false; $c13detail = "Kon Firewall/DDoS niet ophalen" }
-Write-CheckResult "COEO-C13" "Azure DDoS Protection / Firewall ingeschakeld" $c13ok -Warning $c13warning -Detail $c13detail
+Write-CheckResult "PLATFORM-C13" "Azure DDoS Protection / Firewall ingeschakeld" $c13ok -Warning $c13warning -Detail $c13detail
 
 # IAM-3 — Managed Identities
-# Fix: zocht alleen naar user-assigned managed identities (Microsoft.ManagedIdentity/
-# userAssignedIdentities), een los resourcetype. System-assigned identities zijn geen
-# losse resource maar een eigenschap (Identity-blok) van de resource die ze hosten
-# (bijv. een VM, Function App, Logic App). Die werden hierdoor volledig gemist.
-# Nu wordt over beide platform-subscriptions gezocht naar resources met een
-# Identity.Type van 'SystemAssigned', 'UserAssigned', of 'SystemAssigned,UserAssigned'.
+# Fix v1: zocht alleen naar user-assigned managed identities (eigen resourcetype).
+# Fix v2: voegde system-assigned toe, maar beperkt tot 4 hardcoded resourcetypes
+# (VM, Web App, Logic App, Container Instance) — miste daadwerkelijke identities
+# op Storage Accounts, Automation Accounts, Recovery Services Vaults, en Azure
+# Local/Arc-resources (AzureStackHCI, ResourceConnector, HybridCompute).
+# Fix v3 (huidige): gebruikt Azure Resource Graph (Search-AzGraph) om in één
+# tenant-brede query ALLE resources met een Identity-blok te vinden, ongeacht
+# resourcetype. Dit elimineert de noodzaak van een hardcoded resourcetype-lijst.
+# Valt terug op de oude per-resourcetype methode als Az.ResourceGraph niet
+# geïnstalleerd is, zodat het script niet hard faalt.
 try {
-    $iam3SubsToCheck = @($ConnectivitySubId, $ManagementSubId) | Select-Object -Unique
-    $userAssignedFound   = @()
-    $systemAssignedFound = @()
+    $argModule = Get-Module -ListAvailable -Name Az.ResourceGraph -ErrorAction SilentlyContinue
 
-    foreach ($subId in $iam3SubsToCheck) {
-        Set-AzContext -SubscriptionId $subId -ErrorAction SilentlyContinue | Out-Null
+    if ($argModule) {
+        # Resource Graph doorzoekt automatisch alle subscriptions waartoe de
+        # huidige principal toegang heeft — geen Set-AzContext-loop nodig.
+        $iam3Query = @"
+Resources
+| where isnotempty(identity)
+| where identity.type != 'None'
+| project name, type, resourceGroup, subscriptionId, identityType=identity.type
+"@
+        $iam3Resources = Search-AzGraph -Query $iam3Query -ErrorAction Stop
 
-        # User-assigned: eigen resourcetype
-        $uai = Get-AzResource -ResourceType "Microsoft.ManagedIdentity/userAssignedIdentities" `
-            -ErrorAction SilentlyContinue
-        if ($uai) { $userAssignedFound += $uai }
+        $iam3ok = ($iam3Resources).Count -gt 0
+        $iam3detail = if ($iam3ok) {
+            $byType = $iam3Resources | Group-Object -Property type
+            $typeSummary = ($byType | ForEach-Object { "$($_.Count)x $($_.Name -replace '^microsoft\.', '')" }) -join ', '
+            "$($iam3Resources.Count) resource(s) met managed identity (tenant-breed, via Resource Graph): $typeSummary"
+        } else {
+            "Geen resources met een Identity-blok gevonden (tenant-breed, via Resource Graph)"
+        }
+    } else {
+        # Fallback: oude methode, beperkt tot platform-subscriptions en een vaste resourcetype-lijst
+        $iam3SubsToCheck = @($ConnectivitySubId, $ManagementSubId) | Select-Object -Unique
+        $userAssignedFound   = @()
+        $systemAssignedFound = @()
 
-        # System-assigned: zit als Identity-eigenschap op willekeurige resources.
-        # Get-AzResource haalt het Identity-blok niet standaard op, dus elke resource
-        # met een mogelijke identity moet individueel bevraagd worden. Dit is kostbaar
-        # bij grote subscriptions, dus beperkt tot de meest voorkomende resourcetypes
-        # die managed identities gebruiken (VM's, Function Apps, Web Apps, Logic Apps).
-        $candidateTypes = @(
-            "Microsoft.Compute/virtualMachines",
-            "Microsoft.Web/sites",
-            "Microsoft.Logic/workflows",
-            "Microsoft.ContainerInstance/containerGroups"
-        )
-        foreach ($type in $candidateTypes) {
-            $resources = Get-AzResource -ResourceType $type -ErrorAction SilentlyContinue
-            foreach ($res in $resources) {
-                # -ExpandProperties haalt het Identity-blok mee op
-                $full = Get-AzResource -ResourceId $res.ResourceId -ExpandProperties -ErrorAction SilentlyContinue
-                if ($full.Identity -and $full.Identity.Type -and $full.Identity.Type -ne "None") {
-                    $systemAssignedFound += [PSCustomObject]@{
-                        Name = $full.Name
-                        Type = $full.Identity.Type
-                        ResourceType = $type
+        foreach ($subId in $iam3SubsToCheck) {
+            Set-AzContext -SubscriptionId $subId -ErrorAction SilentlyContinue | Out-Null
+
+            $uai = Get-AzResource -ResourceType "Microsoft.ManagedIdentity/userAssignedIdentities" `
+                -ErrorAction SilentlyContinue
+            if ($uai) { $userAssignedFound += $uai }
+
+            $candidateTypes = @(
+                "Microsoft.Compute/virtualMachines",
+                "Microsoft.Web/sites",
+                "Microsoft.Logic/workflows",
+                "Microsoft.ContainerInstance/containerGroups",
+                "Microsoft.Storage/storageAccounts",
+                "Microsoft.Automation/automationAccounts",
+                "Microsoft.RecoveryServices/vaults"
+            )
+            foreach ($type in $candidateTypes) {
+                $resources = Get-AzResource -ResourceType $type -ErrorAction SilentlyContinue
+                foreach ($res in $resources) {
+                    $full = Get-AzResource -ResourceId $res.ResourceId -ExpandProperties -ErrorAction SilentlyContinue
+                    if ($full.Identity -and $full.Identity.Type -and $full.Identity.Type -ne "None") {
+                        $systemAssignedFound += [PSCustomObject]@{ Name = $full.Name; Type = $full.Identity.Type }
                     }
                 }
             }
         }
-    }
 
-    $iam3ok = ($userAssignedFound.Count + $systemAssignedFound.Count) -gt 0
-    $iam3detail = if ($iam3ok) {
-        $parts = @()
-        if ($userAssignedFound.Count -gt 0) {
-            $parts += "$($userAssignedFound.Count) user-assigned: $(($userAssignedFound | ForEach-Object { $_.Name }) -join ', ')"
+        $iam3ok = ($userAssignedFound.Count + $systemAssignedFound.Count) -gt 0
+        $iam3detail = if ($iam3ok) {
+            $parts = @()
+            if ($userAssignedFound.Count -gt 0) {
+                $parts += "$($userAssignedFound.Count) user-assigned"
+            }
+            if ($systemAssignedFound.Count -gt 0) {
+                $parts += "$($systemAssignedFound.Count) system-assigned"
+            }
+            ($parts -join ' | ') + " (fallback-methode, beperkt tot Connectivity/Management + vaste resourcetype-lijst — installeer Az.ResourceGraph voor volledige tenant-brede dekking)"
+        } else {
+            "Geen managed identities gevonden (fallback-methode, beperkt tot Connectivity/Management — installeer Az.ResourceGraph voor volledige tenant-brede dekking)"
         }
-        if ($systemAssignedFound.Count -gt 0) {
-            $sysNames = ($systemAssignedFound | ForEach-Object { "$($_.Name) ($($_.Type))" }) -join ', '
-            $parts += "$($systemAssignedFound.Count) system-assigned: $sysNames"
-        }
-        $parts -join ' | '
-    } else {
-        "Geen user-assigned of system-assigned managed identities gevonden op Connectivity/Management " +
-        "(system-assigned check beperkt tot VM's, Web Apps, Logic Apps, Container Instances)"
     }
 } catch { $iam3ok = $false; $iam3detail = "Kon managed identities niet ophalen: $_" }
 Write-CheckResult "IAM-3" "Managed Identities voor workload-identities aangemaakt" $iam3ok -Detail $iam3detail
@@ -1238,7 +1326,7 @@ if ($ManagementSubId) {
     Set-AzContext -SubscriptionId $ManagementSubId -ErrorAction SilentlyContinue | Out-Null
 }
 
-# COEO-M03 — Log Analytics Workspaces (minimaal 2)
+# PLATFORM-M03 — Log Analytics Workspaces (minimaal 2)
 try {
     $allWs  = Get-AzOperationalInsightsWorkspace -ErrorAction SilentlyContinue
     $m03ok  = ($allWs).Count -ge 2
@@ -1248,9 +1336,9 @@ try {
         "$($allWs.Count)/2 workspace(s) gevonden$(if ($allWs.Count -gt 0) { ": $($allWs.Name -join ', ')" }) — verwacht: infra + security workspace"
     }
 } catch { $m03ok = $false; $m03detail = "Kon Log Analytics workspaces niet ophalen" }
-Write-CheckResult "COEO-M03" "Twee Log Analytics Workspaces aangemaakt (infra + security)" $m03ok -Detail $m03detail
+Write-CheckResult "PLATFORM-M03" "Twee Log Analytics Workspaces aangemaakt (infra + security)" $m03ok -Detail $m03detail
 
-# COEO-M03a — Retentie minimaal 30 dagen
+# PLATFORM-M03a — Retentie minimaal 30 dagen
 try {
     Set-AzContext -SubscriptionId $ManagementSubId -ErrorAction SilentlyContinue | Out-Null
     $allWs    = Get-AzOperationalInsightsWorkspace -ErrorAction SilentlyContinue
@@ -1262,9 +1350,9 @@ try {
         "Te lage retentie: $(($shortWs | ForEach-Object { "$($_.Name)=$($_.retentionInDays)d" }) -join ', ') (minimum: 30 dagen)"
     }
 } catch { $m03aok = $false; $m03adetail = "Kon retentie niet controleren" }
-Write-CheckResult "COEO-M03a" "Data retentie Log Analytics minimaal 30 dagen" $m03aok -Detail $m03adetail
+Write-CheckResult "PLATFORM-M03a" "Data retentie Log Analytics minimaal 30 dagen" $m03aok -Detail $m03adetail
 
-# COEO-M05 — Defender for Cloud (CSPM)
+# PLATFORM-M05 — Defender for Cloud (CSPM)
 try {
     $pricings       = Get-AzSecurityPricing -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
     $activePricings = $pricings | Where-Object {
@@ -1277,9 +1365,9 @@ try {
         "Geen Defender-plans actief — activeer minimaal CloudPosture voor CSPM"
     }
 } catch { $m05ok = $false; $m05detail = "Kon Defender pricing niet ophalen" }
-Write-CheckResult "COEO-M05" "Defender for Cloud geactiveerd voor CSPM" $m05ok -Detail $m05detail
+Write-CheckResult "PLATFORM-M05" "Defender for Cloud geactiveerd voor CSPM" $m05ok -Detail $m05detail
 
-# COEO-M07/08 — Diagnostic settings
+# PLATFORM-M07/08 — Diagnostic settings
 try {
     Set-AzContext -SubscriptionId $ManagementSubId -ErrorAction SilentlyContinue -WarningAction SilentlyContinue | Out-Null
     $diagResources = Get-AzResource -ResourceGroupName $LogAnalyticsRGPlatform `
@@ -1297,9 +1385,9 @@ try {
         "Geen diagnostic settings gevonden"
     }
 } catch { $m0708ok = $false; $m0708detail = "Kon diagnostic settings niet ophalen" }
-Write-CheckResult "COEO-M07/08" "Azure Monitor diagnostische instellingen geconfigureerd" $m0708ok -Detail $m0708detail
+Write-CheckResult "PLATFORM-M07/08" "Azure Monitor diagnostische instellingen geconfigureerd" $m0708ok -Detail $m0708detail
 
-# COEO-M09/10 — AMBA alerts
+# PLATFORM-M09/10 — AMBA alerts
 try {
     Set-AzContext -SubscriptionId $ManagementSubId -ErrorAction SilentlyContinue | Out-Null
     $alertRules      = Get-AzResource -ResourceType "Microsoft.Insights/metricAlerts" `
@@ -1314,9 +1402,9 @@ try {
         "Geen alert rules gevonden"
     }
 } catch { $m0910ok = $false; $m0910detail = "Kon alert rules niet ophalen" }
-Write-CheckResult "COEO-M09/10" "Azure Monitor Baseline Alerts (AMBA) ingericht" $m0910ok -Detail $m0910detail
+Write-CheckResult "PLATFORM-M09/10" "Azure Monitor Baseline Alerts (AMBA) ingericht" $m0910ok -Detail $m0910detail
 
-# COEO-G14 — Action Groups voor alerting
+# PLATFORM-G14 — Action Groups voor alerting
 try {
     $actionGroups = Get-AzActionGroup -ErrorAction SilentlyContinue
     $g14ok        = ($actionGroups).Count -gt 0
@@ -1326,37 +1414,37 @@ try {
         "Geen action groups gevonden — maak aan met contactpersonen voor alerts"
     }
 } catch { $g14ok = $false; $g14detail = "Kon action groups niet ophalen" }
-Write-CheckResult "COEO-G14" "Alerting geconfigureerd naar contactpersonen (action groups)" $g14ok -Detail $g14detail
+Write-CheckResult "PLATFORM-G14" "Alerting geconfigureerd naar contactpersonen (action groups)" $g14ok -Detail $g14detail
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 9. LANDING ZONES
 # ═══════════════════════════════════════════════════════════════════════════════
 Write-SectionHeader "9. Landing Zones"
 
-# COEO-LZ01 — Landing Zones MG aanmaken
+# PLATFORM-LZ01 — Landing Zones MG aanmaken
 $lz01mg = Find-ManagementGroup -Name $LandingZonesMgName
 $lz01ok = ($null -ne $lz01mg)
-Write-CheckResult "COEO-LZ01" "[$LandingZonesMgName] MG aangemaakt onder [$IntermediateRootMgName]" $lz01ok `
+Write-CheckResult "PLATFORM-LZ01" "[$LandingZonesMgName] MG aangemaakt onder [$IntermediateRootMgName]" $lz01ok `
     -Detail $(if ($lz01ok) {
         "MG gevonden — DisplayName: '$($lz01mg.DisplayName)' | GroupId: '$($lz01mg.Name)'"
     } else {
         "MG '$LandingZonesMgName' niet gevonden"
     })
 
-# COEO-LZ02 — Prod én Non-Prod MGs per landing zone
+# PLATFORM-LZ02 — Prod én Non-Prod MGs per landing zone
 # Opinionated: CAF raadt environment-based management groups expliciet af.
 # Zie: https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/management-application-environments
 # Deze check wordt als 'opinionated/skipped' gemeld in plaats van als harde fout.
-Write-CheckResult "COEO-LZ02" "Prod én Non-Prod MGs per landing zone" $false -Skipped $true `
+Write-CheckResult "PLATFORM-LZ02" "Prod én Non-Prod MGs per landing zone" $false -Skipped $true `
     -Detail "Opinionated: CAF raadt env-based MGs af — gebruik liever aparte subscriptions per OTAP-omgeving"
 
-# COEO-LZ-std — Per landing zone: Log Analytics Workspace + Key Vault
+# PLATFORM-LZ-std — Per landing zone: Log Analytics Workspace + Key Vault
 # Fix: volledig recursieve MG-traversal via -Recurse flag.
 # De vorige versie ging maar één niveau diep; bij meerdere MG-niveaus (LZ → Corp/Online → sub)
 # werden geen subscriptions gevonden.
 try {
     if (-not $lz01mg) {
-        Write-CheckResult "COEO-LZ-std" "Per LZ: Log Analytics Workspace + Key Vault aanwezig" $false -Skipped $true `
+        Write-CheckResult "PLATFORM-LZ-std" "Per LZ: Log Analytics Workspace + Key Vault aanwezig" $false -Skipped $true `
             -Detail "Landing Zones MG '$LandingZonesMgName' niet gevonden — kan LZ-subscriptions niet ophalen"
     } else {
         # -Recurse haalt de volledige subtree op in één API-call
@@ -1379,7 +1467,7 @@ try {
         $lzSubIds = $script:lzSubIds
 
         if ($lzSubIds.Count -eq 0) {
-            Write-CheckResult "COEO-LZ-std" "Per LZ: Log Analytics Workspace + Key Vault aanwezig" $false -Skipped $true `
+            Write-CheckResult "PLATFORM-LZ-std" "Per LZ: Log Analytics Workspace + Key Vault aanwezig" $false -Skipped $true `
                 -Detail "Geen subscriptions gevonden onder '$LandingZonesMgName' MG (inclusief sub-MGs)"
         } else {
             $lzLawsFound = @()
@@ -1401,19 +1489,19 @@ try {
                 if (-not $lzKvsFound)  { $missing += "Key Vault" }
                 "Ontbrekend: $($missing -join ', ') — steekproef: $([Math]::Min(5,$lzSubIds.Count)) van $($lzSubIds.Count) LZ-subs"
             }
-            Write-CheckResult "COEO-LZ-std" "Per LZ: Log Analytics Workspace + Key Vault aanwezig" $lzstdok -Detail $lzstddetail
+            Write-CheckResult "PLATFORM-LZ-std" "Per LZ: Log Analytics Workspace + Key Vault aanwezig" $lzstdok -Detail $lzstddetail
         }
     }
 } catch {
-    Write-CheckResult "COEO-LZ-std" "Per LZ: Log Analytics Workspace + Key Vault aanwezig" $false -Skipped $true `
+    Write-CheckResult "PLATFORM-LZ-std" "Per LZ: Log Analytics Workspace + Key Vault aanwezig" $false -Skipped $true `
         -Detail "Kon Landing Zone subscriptions niet ophalen: $_"
 }
 
-# COEO-LZ-bkp — Recovery Services Vault
+# PLATFORM-LZ-bkp — Recovery Services Vault
 # Fix: zocht voorheen alleen in $ManagementSubId. Vaults onder Landing Zone-
-# subscriptions (bijv. RSV-coeo-LZ-hub onder de LZ "Base" subscription) werden
+# subscriptions (bijv. RSV-PLATFORM-LZ-hub onder de LZ "Base" subscription) werden
 # daardoor gemist. Nu wordt ook gezocht in $ConnectivitySubId en alle subscriptions
-# onder de Landing Zones MG ($lzSubIds, opgehaald bij COEO-LZ-std hierboven).
+# onder de Landing Zones MG ($lzSubIds, opgehaald bij PLATFORM-LZ-std hierboven).
 try {
     $rsvSubsToCheck = @($ConnectivitySubId, $ManagementSubId)
     if ($lzSubIds -and $lzSubIds.Count -gt 0) {
@@ -1436,7 +1524,7 @@ try {
         "Geen Recovery Services Vaults gevonden in $($rsvSubsToCheck.Count) gecontroleerde subscription(s) — deployen via azurerm_recovery_services_vault"
     }
 } catch { $lzbkpok = $false; $lzbkpdetail = "Kon Recovery Services Vaults niet ophalen: $_" }
-Write-CheckResult "COEO-LZ-bkp" "Recovery Services Vault aanwezig voor VM/SQL-workloads" $lzbkpok -Detail $lzbkpdetail
+Write-CheckResult "PLATFORM-LZ-bkp" "Recovery Services Vault aanwezig voor VM/SQL-workloads" $lzbkpok -Detail $lzbkpdetail
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 10. BUSINESS CONTINUITY & BACKUP
@@ -1469,8 +1557,8 @@ Write-CheckResult "DOWR-B05/06" "Recovery Services Vault aangemaakt (Immutable s
 
 # DOWR-B08 — Private Endpoints voor Backup
 # Fix: zocht voorheen alleen in $ManagementSubId. Nu dezelfde subscription-set
-# als COEO-LZ-bkp ($rsvSubsToCheck), zodat private endpoints bij LZ-vaults
-# (zoals RSV-coeo-LZ-hub) ook gevonden worden.
+# als PLATFORM-LZ-bkp ($rsvSubsToCheck), zodat private endpoints bij LZ-vaults
+# (zoals RSV-PLATFORM-LZ-hub) ook gevonden worden.
 try {
     $backupPEs = @()
     foreach ($subId in $rsvSubsToCheck) {
